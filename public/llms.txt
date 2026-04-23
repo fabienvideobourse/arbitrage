@@ -1,0 +1,15 @@
+# https://videobourse.fr/comparatif
+
+# ArbitrAge — Comparatif indépendant d'intermédiaires financiers
+# Par VideoBourse — https://videobourse.fr/comparatif
+
+ArbitrAge est un comparateur indépendant de courtiers, banques, néobanques, exchanges crypto, CFD et assurances-vie pour investisseurs français. Il calcule le coût total réel de chaque intermédiaire (courtage, change, garde, inactivité) selon l'usage réel de l'utilisateur.
+
+## Pages principales
+- Comparatif tous acteurs : https://videobourse.fr/comparatif/dashboard/courtiers
+- Comparateur avancé : https://videobourse.fr/comparatif/dashboard/comparer
+- Conseiller IA : https://videobourse.fr/comparatif/dashboard/conseiller-ia
+- ETF : https://videobourse.fr/comparatif/dashboard/etf
+
+## À propos
+VideoBourse — https://videobourse.fr

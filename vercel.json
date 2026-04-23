@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/((?!comparatif).*)",
+      "destination": "https://videobourse.fr/comparatif/$1",
+      "permanent": true
+    }
+  ]
+}
