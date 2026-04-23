@@ -55,6 +55,27 @@ export function OffresAdminClient() {
   const [form, setForm]         = useState<Omit<Offer, "id">>(EMPTY);
   const [saving, setSaving]     = useState(false);
 
+  // ── Newsletter inscrits ────────────────────────────────────────────────
+  type Subscriber = { id: number; email: string; created_at: string };
+  const [subscribers, setSubscribers]       = useState<Subscriber[]>([]);
+  const [showSubscribers, setShowSubscribers] = useState(false);
+  const [subsLoading, setSubsLoading]       = useState(false);
+
+  const loadSubscribers = () => {
+    setSubsLoading(true);
+    fetch("/api/offers/newsletter")
+      .then(r => r.json())
+      .then(d => setSubscribers(Array.isArray(d) ? d : []))
+      .catch(() => setSubscribers([]))
+      .finally(() => setSubsLoading(false));
+  };
+
+  const deleteSubscriber = async (id: number) => {
+    if (!confirm("Supprimer cet email ?")) return;
+    await fetch(`/api/offers/newsletter?id=${id}`, { method: "DELETE" });
+    setSubscribers(prev => prev.filter(s => s.id !== id));
+  };
+
   const load = () => {
     setLoading(true);
     fetch("/api/offers?admin=1")
@@ -239,6 +260,53 @@ export function OffresAdminClient() {
           ))}
         </div>
       )}
+
+      {/* ── Inscrits Newsletter ────────────────────────────────────────── */}
+      <div className="rounded-xl border border-border bg-card overflow-hidden">
+        <button
+          onClick={() => { setShowSubscribers(v => !v); if (!showSubscribers) loadSubscribers(); }}
+          className="flex w-full items-center justify-between px-5 py-4 hover:bg-muted/40 transition-colors"
+        >
+          <div>
+            <p className="font-semibold text-sm">Inscrits newsletter offres</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Emails collectés via le formulaire de la page Offres</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {subscribers.length > 0 && (
+              <span className="text-xs font-semibold bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                {subscribers.length}
+              </span>
+            )}
+            {showSubscribers ? <ChevronUp className="size-4 text-muted-foreground" /> : <ChevronDown className="size-4 text-muted-foreground" />}
+          </div>
+        </button>
+        {showSubscribers && (
+          <div className="border-t border-border px-5 py-4">
+            {subsLoading ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">Chargement…</p>
+            ) : subscribers.length === 0 ? (
+              <p className="text-sm text-muted-foreground py-4 text-center">Aucun inscrit pour l&apos;instant.</p>
+            ) : (
+              <div className="space-y-2 max-h-64 overflow-y-auto">
+                {subscribers.map(s => (
+                  <div key={s.id} className="flex items-center justify-between gap-3 rounded-lg bg-muted/40 px-3 py-2">
+                    <div>
+                      <p className="text-sm font-medium">{s.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(s.created_at).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                    </div>
+                    <button onClick={() => deleteSubscriber(s.id)}
+                      className="text-muted-foreground hover:text-red-500 transition-colors flex-shrink-0">
+                      <IconTrash className="size-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {/* MODAL */}
       {showModal && (
