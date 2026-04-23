@@ -1,31 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin as supabase } from '@/lib/supabase';
 
-// ── Brevo helper ───────────────────────────────────────────────────────────
-// Pousse un contact dans Brevo (liste dédiée ArbitrAge Offres).
-// Silencieux en cas d'échec — Supabase reste le backup.
-// Variables d'environnement requises :
-//   BREVO_API_KEY      → clé API Brevo (Settings > API Keys)
-//   BREVO_LIST_ID      → ID numérique de la liste créée dans Brevo
 async function pushToBrevo(email: string): Promise<void> {
   const apiKey = process.env.BREVO_API_KEY;
   const listId = process.env.BREVO_LIST_ID;
 
-  if (!apiKey || !listId) return; // variables non configurées → skip silencieux
+  console.log('[Brevo] apiKey present:', !!apiKey);
+  console.log('[Brevo] listId:', listId);
 
-  await fetch('https://api.brevo.com/v3/contacts', {
+  if (!apiKey || !listId) {
+    console.warn('[Brevo] Variables manquantes — skip');
+    return;
+  }
+
+  const payload = {
+    email,
+    listIds: [parseInt(listId, 10)],
+    updateEnabled: true,
+  };
+
+  console.log('[Brevo] Sending payload:', JSON.stringify(payload));
+
+  const res = await fetch('https://api.brevo.com/v3/contacts', {
     method: 'POST',
     headers: {
       'accept':       'application/json',
       'content-type': 'application/json',
       'api-key':      apiKey,
     },
-    body: JSON.stringify({
-      email,
-      listIds:       [parseInt(listId, 10)],
-      updateEnabled: true, // met à jour si le contact existe déjà
-    }),
+    body: JSON.stringify(payload),
   });
+
+  const text = await res.text();
+  console.log('[Brevo] Response status:', res.status);
+  console.log('[Brevo] Response body:', text);
+
+  if (!res.ok) {
+    console.error('[Brevo] Erreur:', res.status, text);
+  }
 }
 
 // GET — liste des inscrits (admin)
@@ -38,7 +50,7 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
-// POST — inscription newsletter (Supabase + Brevo en parallèle)
+// POST — inscription newsletter (Supabase + Brevo)
 export async function POST(req: NextRequest) {
   const { email } = await req.json();
 
@@ -48,7 +60,6 @@ export async function POST(req: NextRequest) {
 
   const clean = email.toLowerCase().trim();
 
-  // Déjà inscrit en base ?
   const { data: existing } = await supabase
     .from('offers_newsletter')
     .select('email')
@@ -59,7 +70,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Vous êtes déjà inscrit !' }, { status: 409 });
   }
 
-  // Insérer dans Supabase
   const { error } = await supabase
     .from('offers_newsletter')
     .insert({ email: clean });
@@ -68,8 +78,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Pousser vers Brevo en parallèle (sans bloquer la réponse)
-  pushToBrevo(clean).catch(() => {}); // erreur silencieuse — Supabase est le backup
+  // Attendre Brevo (au lieu de fire-and-forget) pour éviter la coupure
+  try {
+    await pushToBrevo(clean);
+  } catch (e) {
+    console.error('[Brevo] Exception:', e);
+  }
 
   return NextResponse.json({ success: true });
 }
