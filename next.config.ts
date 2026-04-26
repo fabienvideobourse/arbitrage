@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'api.faviconkit.com' },
     ]
   },
+
   transpilePackages: ['geist'],
 
   // ── Désindexer l'ancien sous-domaine Vercel pour éviter le contenu dupliqué.
@@ -36,6 +37,17 @@ const nextConfig: NextConfig = {
         // LP = page tous les acteurs (plus de landing Framer)
         source: '/',
         destination: '/dashboard/courtiers',
+      },
+    ];
+  },
+
+  async redirects() {
+    return [
+      {
+        // Ancienne URL → nouvelle URL filtrée Futures
+        source: '/comparatif-brokers-futures',
+        destination: '/dashboard/courtiers?accountType=FUTURES+OPTIONS',
+        permanent: true,
       },
     ];
   },
