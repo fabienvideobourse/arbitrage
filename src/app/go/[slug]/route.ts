@@ -25,11 +25,13 @@ export async function GET(
   try {
     const { error } = await supabaseAdmin
       .from('affiliate_clicks')
-      .insert({ 
-        broker_id: slug, 
-        broker_name: data.name, 
-        source 
-      });
+      .insert({
+          broker_id: slug,
+          broker_name: data.name,
+          source,
+          user_agent: request.headers.get('user-agent') ?? null,
+          ip_address: request.headers.get('x-forwarded-for')?.split(',')[0] ?? null,
+        });
     if (error) console.error('Tracking insert error:', error.message);
   } catch (err) {
     console.error('Tracking error:', err);

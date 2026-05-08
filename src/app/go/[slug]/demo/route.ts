@@ -26,6 +26,8 @@ export async function GET(
       broker_id:   slug,
       broker_name: data.name,
       source,
+      user_agent: request.headers.get('user-agent') ?? null,
+      ip_address: request.headers.get('x-forwarded-for')?.split(',')[0] ?? null,
     });
   } catch (err) {
     console.error('Demo tracking error:', err);
