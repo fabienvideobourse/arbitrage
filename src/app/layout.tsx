@@ -17,8 +17,8 @@ const META_THEME_COLORS = {
 };
 
 export const metadata: Metadata = {
-  title: 'Comparateur courtiers, brokers & néobanques France | Arbitrage by VideoBourse',
-  description: 'Comparez les frais de 40+ courtiers, néobanques et brokers CFD en France. Scores indépendants, avis vérifiés et simulateur de frais. Arbitrage by VideoBourse.',
+  title: 'Comparateur Brokers & Courtiers Bourse 2026 | Meilleur Broker France - VideoBourse',
+  description: 'Comparez les meilleurs brokers, courtiers bourse et néobanques en France. Frais, commissions, avis et scores indépendants sur 40+ intermédiaires. Mis à jour 2026.',
   icons: {
     icon: 'https://framerusercontent.com/images/qimvwYEjN00Vjzt7SSbnQfmuB4.svg',
     shortcut: 'https://framerusercontent.com/images/qimvwYEjN00Vjzt7SSbnQfmuB4.svg',
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: 'website',
-    title: 'Comparateur courtiers, brokers & néobanques France | Arbitrage by VideoBourse',
-    description: 'Comparez les frais de 40+ courtiers, néobanques et brokers CFD en France. Scores indépendants, avis vérifiés et simulateur de frais. Arbitrage by VideoBourse.',
+    title: 'Comparateur Brokers & Courtiers Bourse 2026 | Meilleur Broker France - VideoBourse',
+    description: 'Comparez les meilleurs brokers, courtiers bourse et néobanques en France. Frais, commissions, avis et scores indépendants sur 40+ intermédiaires. Mis à jour 2026.',
     images: [{ url: 'https://framerusercontent.com/images/cB9wgyzc0EYXTdSFxeCpMyXx7zg.png' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Comparateur courtiers, brokers & néobanques France | Arbitrage by VideoBourse',
-    description: 'Comparez les frais de 40+ courtiers, néobanques et brokers CFD en France. Scores indépendants, avis vérifiés et simulateur de frais. Arbitrage by VideoBourse.',
+    title: 'Comparateur Brokers & Courtiers Bourse 2026 | Meilleur Broker France - VideoBourse',
+    description: 'Comparez les meilleurs brokers, courtiers bourse et néobanques en France. Frais, commissions, avis et scores indépendants sur 40+ intermédiaires. Mis à jour 2026.',
     images: ['https://framerusercontent.com/images/cB9wgyzc0EYXTdSFxeCpMyXx7zg.png'],
   },
 };
